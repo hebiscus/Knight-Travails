@@ -1,2 +1,2 @@
-# Knights-Travails
+# Knight-Travails
 Odin Project: Knights Travails
