@@ -10,19 +10,31 @@ class Graph {
     this.adjacent[v] = [];
   }
   
-  addEdge(v, w) {
-    this.adjacent[v].push(w);
-    this.adjacent[w].push(v);
-    this.edges++;
+  addEdges() {
+    for (let i = 0; i < board.length; i++) {
+      board[i].forEach((vertice) => {
+        let adjacentVertices = [`${vertice[0] - 1},${vertice[1] - 2}`, `${vertice[0] - 2},${vertice[1] - 1}`, `${vertice[0] - 2},${vertice[1] + 1}`, `${vertice[0] - 1},${vertice[1] + 2}`, `${vertice[0] + 1},${vertice[1] - 2}`, `${vertice[0] + 1},${vertice[1] + 2}`, `${vertice[0] + 2},${vertice[1] - 1}`, `${vertice[0] + 2},${vertice[1] + 1}`];
+        while (adjacentVertices.length != 0) {
+          let currentAdjacent = adjacentVertices[0];
+          if (JSON.stringify(this.vertices).includes(currentAdjacent)) {
+            graph.adjacent[vertice].push(currentAdjacent);
+            graph.edges++;
+            adjacentVertices.shift();
+          } else {
+            adjacentVertices.shift();
+          }
+        }
+      })
+    }
   }
 
-  bfs(root = this.vertices[0], goal) {
+  knightMoves(root = this.vertices[0], goal) {
     if (goal == root) {
       return "distance: 0";
     }
-    // if (!vertices.includes(goal) || !vertices.includes(root)) {
-    //   return "no such place on the board"
-    // }
+    if (!JSON.stringify(this.vertices).includes(goal) || !JSON.stringify(this.vertices).includes(root)) {
+      return "no such place on the board";
+    }
     let adj = this.adjacent;
 
     const queue = [];
@@ -79,49 +91,30 @@ class Graph {
 
 }
 
-const graph = new Graph(16);
+const graph = new Graph();
 
-var iMax = 8;
-var jMax = 8;
+var rows = 8;
+var columns = 8;
 var board = [];
 
-for (i = 0; i < iMax; i++) {
+for (i = 0; i < rows; i++) {
   board[i] = [];
-  for (j = 0; j < jMax; j++) {
+  for (j = 0; j < columns; j++) {
     board[i][j] = [i, j];
   }
-}
+};
 
 board.forEach((row) => {
   for (var i = 0; i < row.length; i++) {
   graph.addVertex(row[i]);
-}
-})
-
-
-let stringVertices = JSON.stringify(graph.vertices);
-
-
-function addEdges() {
-  for (let i = 0; i < board.length; i++) {
-    board[i].forEach((vertice) => {
-      let adjacentVertices = [`${vertice[0] - 1},${vertice[1] - 2}`, `${vertice[0] - 2},${vertice[1] - 1}`, `${vertice[0] - 2},${vertice[1] + 1}`, `${vertice[0] - 1},${vertice[1] + 2}`, `${vertice[0] + 1},${vertice[1] - 2}`, `${vertice[0] + 1},${vertice[1] + 2}`, `${vertice[0] + 2},${vertice[1] - 1}`, `${vertice[0] + 2},${vertice[1] + 1}`];
-      while (adjacentVertices.length != 0) {
-        currentAdjacent = adjacentVertices[0]
-        if (stringVertices.includes(currentAdjacent)) {
-          graph.adjacent[vertice].push(currentAdjacent);
-           graph.edges++;
-          adjacentVertices.shift();
-        } else {
-          adjacentVertices.shift();
-        }
-      }
-  })
   }
-  
-}
+});
 
-addEdges()
+graph.addEdges();
 
-
-console.log(graph.bfs('0,4', '1,4'))
+console.log(graph.knightMoves("3,4", '7,5'));
+// logs: {moves: 3, path: '3,4 -> 4,2 -> 5,4 -> 7,5'}
+console.log(graph.knightMoves("3,4", '3,4'));
+// logs: distance: 0
+console.log(graph.knightMoves("-3.4", '32323,4'));
+// logs: no such place on the board
