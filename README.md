@@ -1,5 +1,5 @@
 # Knight-Travails
-Odin Project: Knights Travails
+Odin Project: Knight Travails
 
 Solution for: https://www.theodinproject.com/lessons/javascript-knights-travails
 
